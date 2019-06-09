@@ -1,5 +1,7 @@
 {
   "name": "RHBiometrico",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }

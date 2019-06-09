@@ -1,0 +1,65 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Inicio</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button>
+        <ion-icon name="cog"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+
+  <ion-row>
+    <ion-col>
+      <ion-card no-margin margin-bottom class="full-width">
+        <ion-list>
+          <ion-item>
+            <h1>Bienvenido!</h1>
+          </ion-item>
+
+          <ion-item>
+            <ion-icon name="person" slot="start"></ion-icon>
+            <h2 ion-text color="dark">Junior Guzman Martinez</h2>
+          </ion-item>
+        </ion-list>
+      </ion-card>
+
+      <ion-card no-margin margin-bottom>
+        <ion-card-content>
+          <ion-item>
+            <ion-label position="floating">Ingrese Detalle de Asistencia</ion-label>
+            <ion-input type="text"></ion-input>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+
+
+  <ion-button expand="full" size="large" color="secondary">Marcar Asistencia</ion-button>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar color="primary">
+    <div class="tabs">
+      <div class="tab" [ngClass]="{ 'active' : segment === 'asistencia' }" (click)="onTabSelected('asistencia')">
+        <ion-icon name="finger-print"></ion-icon>
+        <div class="label">Asistencia</div>
+      </div>
+      <div class="tab" [ngClass]="{ 'active' : segment === 'ubicacion' }" (click)="onTabSelected('ubicacion')">
+        <ion-icon name="map"></ion-icon>
+        <div class="label">Ubicación</div>
+      </div>
+      <div class="tab" [ngClass]="{ 'active' : segment === 'perfil' }" (click)="onTabSelected('perfil')">
+        <ion-icon name="person"></ion-icon>
+        <div class="label">Perfil</div>
+      </div>
+    </div>
+  </ion-toolbar>
+</ion-footer>

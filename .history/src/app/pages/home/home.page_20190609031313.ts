@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { AndroidFingerprintAuth } from '@ionic-native/android-fingerprint-auth/ngx';
+import { IonContent, NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -8,7 +9,16 @@ import { AndroidFingerprintAuth } from '@ionic-native/android-fingerprint-auth/n
 })
 export class HomePage {
 
-  constructor(private androidFingerprintAuth: AndroidFingerprintAuth) { }
+  segment: string;
+  page: number;
+  @ViewChild(IonContent) content: IonContent;
+
+  constructor(private androidFingerprintAuth: AndroidFingerprintAuth, private navCtrl: NavController) { }
+
+  // tslint:disable-next-line:use-life-cycle-interface
+  ngOnInit(): void {
+    this.onTabSelected('asistencia');
+  }
 
   auntenticar() {
     this.androidFingerprintAuth.isAvailable()
@@ -34,6 +44,12 @@ export class HomePage {
         // fingerprint auth isn't available
       }
     }).catch(error => console.error(error));
+  }
+  onTabSelected(segmentValue: string) {
+    this.segment = segmentValue;
+    this.page = 1;
+    this.content.scrollToTop();
+    this.navCtrl.navigateRoot('/ubicacion');
   }
 }
 
