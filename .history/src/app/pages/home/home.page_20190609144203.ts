@@ -67,33 +67,31 @@ export class HomePage {
   loadMap(latitude, longitude) {
     const mapOptions: GoogleMapOptions = {
       camera: {  target: new LatLng(latitude, longitude),
+        // target: {
+        //   lat: latitude, // default location
+        //   lng: longitude // default location
+        // },
         zoom: 18,
         tilt: 30
       }
     };
 
-    this.map = this.googleMaps.create('map_canvas', mapOptions);
     const markerOptions: MarkerOptions = {
       position: new LatLng(latitude, longitude),
       title: 'Yo'
     };
     this.map.addMarker(markerOptions);
-    // this.map.one(GoogleMapsEvent.MAP_READY)
-    // .then(() => {
-    //   this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
-    //     console.log('Map is ready!');
-    //     // move the map's camera to position
-    //     this.map.moveCamera(mapOptions.camera);
-    //     const markerOptiones: MarkerOptions = {
-    //       position: new LatLng(latitude, longitude),
-    //       title: 'Yo'
-    //     };
-    //     this.addMarker(markerOptions);
-    //   });
-    // })
-    // .catch(error => {
-    //   console.log(error);
-    // });
+    this.map.one(GoogleMapsEvent.MAP_READY)
+    .then(() => {
+      this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
+        console.log('Map is ready!');
+        // move the map's camera to position
+        this.map.moveCamera(mapOptions.camera);
+      });
+    })
+    .catch(error => {
+      console.log(error);
+    });
 
   }
 

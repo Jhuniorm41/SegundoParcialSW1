@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { AndroidFingerprintAuth } from '@ionic-native/android-fingerprint-auth/ngx';
 import { IonContent, NavController } from '@ionic/angular';
 import { GoogleMapsEvent, GoogleMapOptions, GoogleMap, GoogleMaps, CameraPosition, LatLng, MarkerOptions } from '@ionic-native/google-maps';
@@ -17,7 +17,6 @@ export class HomePage {
   page: number;
 
   @ViewChild(IonContent) content: IonContent;
-  @ViewChild('map') mapElement: ElementRef;
   constructor(private androidFingerprintAuth: AndroidFingerprintAuth,
               private googleMaps: GoogleMaps,
               private geolocation: Geolocation) { }
@@ -67,33 +66,37 @@ export class HomePage {
   loadMap(latitude, longitude) {
     const mapOptions: GoogleMapOptions = {
       camera: {  target: new LatLng(latitude, longitude),
+        // target: {
+        //   lat: latitude, // default location
+        //   lng: longitude // default location
+        // },
         zoom: 18,
         tilt: 30
       }
     };
 
     this.map = this.googleMaps.create('map_canvas', mapOptions);
-    const markerOptions: MarkerOptions = {
-      position: new LatLng(latitude, longitude),
-      title: 'Yo'
-    };
-    this.map.addMarker(markerOptions);
-    // this.map.one(GoogleMapsEvent.MAP_READY)
-    // .then(() => {
-    //   this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
-    //     console.log('Map is ready!');
-    //     // move the map's camera to position
-    //     this.map.moveCamera(mapOptions.camera);
-    //     const markerOptiones: MarkerOptions = {
-    //       position: new LatLng(latitude, longitude),
-    //       title: 'Yo'
-    //     };
-    //     this.addMarker(markerOptions);
-    //   });
-    // })
-    // .catch(error => {
-    //   console.log(error);
-    // });
+
+    this.map.one(GoogleMapsEvent.MAP_READY)
+    .then(() => {
+      this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
+        console.log('Map is ready!');
+        // move the map's camera to position
+        this.map.moveCamera(position);
+        const markerOptions: MarkerOptions = {
+          position: this.myPosition,
+          title: "Hello"
+        };
+        this.addMarker(markerOptions);
+        this.markers.forEach(marker=>{
+          this.addMarker(marker);
+        });
+        
+      });
+    })
+    .catch(error => {
+      console.log(error);
+    });
 
   }
 

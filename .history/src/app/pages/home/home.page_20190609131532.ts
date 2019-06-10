@@ -1,7 +1,7 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { AndroidFingerprintAuth } from '@ionic-native/android-fingerprint-auth/ngx';
 import { IonContent, NavController } from '@ionic/angular';
-import { GoogleMapsEvent, GoogleMapOptions, GoogleMap, GoogleMaps, CameraPosition, LatLng, MarkerOptions } from '@ionic-native/google-maps';
+import { GoogleMapsEvent, GoogleMapOptions, GoogleMap, GoogleMaps, CameraPosition, LatLng } from '@ionic-native/google-maps';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 @Component({
   selector: 'app-home',
@@ -10,24 +10,21 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 })
 export class HomePage {
   map: GoogleMap;
-  coordenadas: any = {};
-  latitude = -17.7761288;
-  longitude = -63.1949231;
+  myPosition: any = {};
   segment = 'asistencia';
   page: number;
 
   @ViewChild(IonContent) content: IonContent;
-  @ViewChild('map') mapElement: ElementRef;
   constructor(private androidFingerprintAuth: AndroidFingerprintAuth,
               private googleMaps: GoogleMaps,
               private geolocation: Geolocation) { }
 
   // tslint:disable-next-line:use-life-cycle-interface
   ngOnInit(): void {
-    this.getCurrentPosition();
+    this.loadMap();
   }
   ionViewDidLoad() {
-    this.loadMap(this.latitude, this.longitude);
+    this.loadMap();
   }
   auntenticar() {
     this.androidFingerprintAuth.isAvailable()
@@ -64,32 +61,25 @@ export class HomePage {
    // this.navCtrl.navigateRoot('/' + segmentValue);
   }
 
-  loadMap(latitude, longitude) {
+  loadMap() {
     const mapOptions: GoogleMapOptions = {
-      camera: {  target: new LatLng(latitude, longitude),
+      camera: {
+        target: {
+          lat: -17.7761288, // default location
+          lng: -63.1949231 // default location
+        },
         zoom: 18,
         tilt: 30
       }
     };
 
     this.map = this.googleMaps.create('map_canvas', mapOptions);
-    const markerOptions: MarkerOptions = {
-      position: new LatLng(latitude, longitude),
-      title: 'Yo'
-    };
-    this.map.addMarker(markerOptions);
+
+    // Wait the MAP_READY before using any methods.
     // this.map.one(GoogleMapsEvent.MAP_READY)
     // .then(() => {
-    //   this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
-    //     console.log('Map is ready!');
-    //     // move the map's camera to position
-    //     this.map.moveCamera(mapOptions.camera);
-    //     const markerOptiones: MarkerOptions = {
-    //       position: new LatLng(latitude, longitude),
-    //       title: 'Yo'
-    //     };
-    //     this.addMarker(markerOptions);
-    //   });
+    //   // Now you can use all methods safely.
+    //   this.getPosition();
     // })
     // .catch(error => {
     //   console.log(error);
@@ -97,30 +87,53 @@ export class HomePage {
 
   }
 
-  getCurrentPosition() {
-    this.geolocation.getCurrentPosition()
-    .then(position => {
-      // tslint:disable-next-line:no-unused-expression
-     // this.latitude: position.coords.latitude;
-      // tslint:disable-next-line:no-unused-expression
-     // this.longitude: position.coords.longitude;
-     this.coordenadas =  {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude
-     };
-     console.warn(this.coordenadas);
-
+  getPosition(): void {
+    this.map.getMyLocation()
+    .then(response => {
+      this.map.moveCamera({
+        target: response.latLng
+      });
+      this.map.addMarker({
+        title: 'Mi posicion',
+        icon: 'blue',
+        animation: 'DROP',
+        position: response.latLng
+      });
     })
     .catch(error => {
       console.log(error);
     });
   }
-  addMarker(options) {
-    const markerOptions: MarkerOptions = {
-      position: new LatLng(options.position.latitude, options.position.longitude),
-      title: options.title
-    };
-    this.map.addMarker(markerOptions);
+  // loadMap() {
+  //   const mapOptions: GoogleMapOptions = {
+  //         camera: {
+  //           target: {
+  //             lat: this.myPosition.latitude, // default location
+  //             lng: this.myPosition.longitude // default location
+  //           },
+  //           zoom: 18,
+  //           tilt: 30
+  //         }
+  //       };
+  //   this.map = this.googleMaps.create('map_canvas', mapOptions);
+  //   this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
+  //     console.log('Map is ready!');
+  //     // move the map's camera to position
+  //     this.map.moveCamera(mapOptions.camera);
+  //   });
+  // }
+
+  getCurrentPosition() {
+    this.geolocation.getCurrentPosition()
+    .then(position => {
+      this.myPosition = {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude};
+      console.warn(this.myPosition);
+    })
+    .catch(error => {
+      console.log(error);
+    });
   }
 }
 

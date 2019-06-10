@@ -67,6 +67,10 @@ export class HomePage {
   loadMap(latitude, longitude) {
     const mapOptions: GoogleMapOptions = {
       camera: {  target: new LatLng(latitude, longitude),
+        // target: {
+        //   lat: latitude, // default location
+        //   lng: longitude // default location
+        // },
         zoom: 18,
         tilt: 30
       }
@@ -77,7 +81,7 @@ export class HomePage {
       position: new LatLng(latitude, longitude),
       title: 'Yo'
     };
-    this.map.addMarker(markerOptions);
+    this.addMarker(this.map);
     // this.map.one(GoogleMapsEvent.MAP_READY)
     // .then(() => {
     //   this.map.one(GoogleMapsEvent.MAP_READY).then(() => {

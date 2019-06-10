@@ -67,6 +67,10 @@ export class HomePage {
   loadMap(latitude, longitude) {
     const mapOptions: GoogleMapOptions = {
       camera: {  target: new LatLng(latitude, longitude),
+        // target: {
+        //   lat: latitude, // default location
+        //   lng: longitude // default location
+        // },
         zoom: 18,
         tilt: 30
       }

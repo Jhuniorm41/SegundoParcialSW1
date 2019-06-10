@@ -1,7 +1,7 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { AndroidFingerprintAuth } from '@ionic-native/android-fingerprint-auth/ngx';
 import { IonContent, NavController } from '@ionic/angular';
-import { GoogleMapsEvent, GoogleMapOptions, GoogleMap, GoogleMaps, CameraPosition, LatLng, MarkerOptions } from '@ionic-native/google-maps';
+import { GoogleMapsEvent, GoogleMapOptions, GoogleMap, GoogleMaps, CameraPosition, LatLng } from '@ionic-native/google-maps';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 @Component({
   selector: 'app-home',
@@ -17,7 +17,6 @@ export class HomePage {
   page: number;
 
   @ViewChild(IonContent) content: IonContent;
-  @ViewChild('map') mapElement: ElementRef;
   constructor(private androidFingerprintAuth: AndroidFingerprintAuth,
               private googleMaps: GoogleMaps,
               private geolocation: Geolocation) { }
@@ -66,30 +65,23 @@ export class HomePage {
 
   loadMap(latitude, longitude) {
     const mapOptions: GoogleMapOptions = {
-      camera: {  target: new LatLng(latitude, longitude),
+      camera: {
+        target: {
+          lat: latitude, // default location
+          lng: longitude // default location
+        },
         zoom: 18,
         tilt: 30
       }
     };
 
     this.map = this.googleMaps.create('map_canvas', mapOptions);
-    const markerOptions: MarkerOptions = {
-      position: new LatLng(latitude, longitude),
-      title: 'Yo'
-    };
-    this.map.addMarker(markerOptions);
+
+    // Wait the MAP_READY before using any methods.
     // this.map.one(GoogleMapsEvent.MAP_READY)
     // .then(() => {
-    //   this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
-    //     console.log('Map is ready!');
-    //     // move the map's camera to position
-    //     this.map.moveCamera(mapOptions.camera);
-    //     const markerOptiones: MarkerOptions = {
-    //       position: new LatLng(latitude, longitude),
-    //       title: 'Yo'
-    //     };
-    //     this.addMarker(markerOptions);
-    //   });
+    //   // Now you can use all methods safely.
+    //   this.getPosition();
     // })
     // .catch(error => {
     //   console.log(error);
@@ -104,23 +96,13 @@ export class HomePage {
      // this.latitude: position.coords.latitude;
       // tslint:disable-next-line:no-unused-expression
      // this.longitude: position.coords.longitude;
-     this.coordenadas =  {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude
-     };
+     this.coordenadas = position.coords;
      console.warn(this.coordenadas);
 
     })
     .catch(error => {
       console.log(error);
     });
-  }
-  addMarker(options) {
-    const markerOptions: MarkerOptions = {
-      position: new LatLng(options.position.latitude, options.position.longitude),
-      title: options.title
-    };
-    this.map.addMarker(markerOptions);
   }
 }
 

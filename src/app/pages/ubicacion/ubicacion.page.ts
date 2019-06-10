@@ -17,7 +17,6 @@ import {
   templateUrl: 'ubicacion.page.html'
 })
 export class UbicacionPage {
-
   map: GoogleMap;
   @ViewChild(IonContent) content: IonContent;
   constructor(
